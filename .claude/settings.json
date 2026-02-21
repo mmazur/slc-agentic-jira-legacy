@@ -1,6 +1,7 @@
 {
   "permissions": {
     "allow": [
+      "WebFetch(domain:issues.redhat.com)",
       "Bash(jira --help:*)",
       "Bash(jira issue create --help:*)",
       "Bash(jira issue view:*)",
