@@ -2,6 +2,14 @@
 
 This repository is for interacting with Jira using the `jira` CLI tool.
 
+## Important: Avoid Piping Commands
+
+When running `jira` commands, avoid piping output (e.g. `| grep ...`). Piping may produce no output due to how the sandboxed environment runs commands. Instead, redirect to a temp file and operate on that:
+
+```bash
+jira sprint list -p AROSLSRE --state active > $TMPDIR/sprints.txt && grep SL $TMPDIR/sprints.txt
+```
+
 ## Default Project
 
 When creating new cards, default to the **AROSLSRE** project.
@@ -100,14 +108,11 @@ Note: The `jira issue move` command does not support the `--no-input` flag.
 ### View Current Sprint
 
 ```bash
-# List all sprints that are mine
-jira sprint list -p AROSLSRE --state active|grep SL
-
-# View current/active sprint
-jira sprint list -p AROSLSRE --state active|grep SL
-
-The `grep SL` is because my team is Service Lifecycle (SL), to only sprints with SL in the name are the correct ones.
+# List active sprints and filter for SL team
+jira sprint list -p AROSLSRE --state active > $TMPDIR/sprints.txt && grep SL $TMPDIR/sprints.txt
 ```
+
+The `grep SL` is because my team is Service Lifecycle (SL), so only sprints with SL in the name are the correct ones.
 
 ### Add Issue to Sprint
 
