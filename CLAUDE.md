@@ -82,7 +82,9 @@ jira issue create -p AROSLSRE -P AROSLSRE-456 -t Task -s "Task summary" -b "Task
 
 To get the current user's email (useful for assigning issues to yourself):
 
-'mmazur@redhat.com' is the current user.
+```bash
+jira me
+```
 
 This can be used with the `-a` flag.
 
@@ -129,4 +131,25 @@ jira issue list -p AROSLSRE
 
 # Open issue in browser
 jira open <issue-key>
+```
+
+## Searching for Issues
+
+When asked to search for, list, or find "my issues" or "our team's issues", include issues from **both** sources:
+
+1. **AROSLSRE project** — all issues in the dedicated project:
+   ```bash
+   jira issue list -p AROSLSRE
+   ```
+
+2. **ARO project with `aro-hcp-service-lifecycle` component** — ARO-project issues belonging to the Service Lifecycle team:
+   ```bash
+   jira issue list -p ARO -C aro-hcp-service-lifecycle
+   ```
+
+To search both at once, run both commands and combine the results (redirect each to a temp file):
+
+```bash
+jira issue list -p AROSLSRE --plain > $TMPDIR/issues_aroslsre.txt
+jira issue list -p ARO -C aro-hcp-service-lifecycle --plain > $TMPDIR/issues_aro_sl.txt
 ```
