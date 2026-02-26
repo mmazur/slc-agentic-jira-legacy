@@ -6,7 +6,6 @@
       "Bash(jira issue create --help:*)",
       "Bash(jira issue view:*)",
       "Bash(jira me:*)",
-      "Bash(jira issue move:*)",
       "Bash(jira sprint list:*)"
     ]
   }
