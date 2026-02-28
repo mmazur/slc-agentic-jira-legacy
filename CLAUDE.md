@@ -133,6 +133,33 @@ jira issue list -p AROSLSRE
 jira open <issue-key>
 ```
 
+## Creating "My Active Card"
+
+When the user says they want to "add my active card" or similar, it means creating a card with all of the following:
+
+1. **Project**: AROSLSRE
+2. **Assignee**: current user (run `jira me` to get the email)
+3. **Sprint**: current active SL sprint (find it with `jira sprint list -p AROSLSRE --state active > $TMPDIR/sprints.txt && grep SL $TMPDIR/sprints.txt`)
+4. **Status**: move to "In Progress" after creation
+
+Full workflow:
+```bash
+# 1. Get current user
+jira me > $TMPDIR/me.txt
+
+# 2. Get active sprint ID
+jira sprint list -p AROSLSRE --state active > $TMPDIR/sprints.txt && grep SL $TMPDIR/sprints.txt
+
+# 3. Create the issue assigned to self
+jira issue create -p AROSLSRE -t Task -s "<summary>" -b "<description>" -a "<your-email>"
+
+# 4. Add to active sprint
+jira sprint add <SPRINT-ID> <ISSUE-KEY>
+
+# 5. Move to In Progress
+jira issue move <ISSUE-KEY> "In Progress"
+```
+
 ## Searching for Issues
 
 When asked to search for, list, or find "my issues" or "our team's issues", include issues from **both** sources:
