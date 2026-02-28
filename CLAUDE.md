@@ -2,9 +2,9 @@
 
 This repository is for interacting with Jira using the `jira` CLI tool.
 
-## Important: Avoid Piping Commands
+## Troubleshooting: Piping Commands
 
-When running `jira` commands, avoid piping output (e.g. `| grep ...`). Piping may produce no output due to how the sandboxed environment runs commands. Instead, redirect to a temp file and operate on that:
+If piping output produces no results (e.g. `jira sprint list ... | grep SL` returns nothing), redirect to a temp file instead:
 
 ```bash
 jira sprint list -p AROSLSRE --state active > $TMPDIR/sprints.txt && grep SL $TMPDIR/sprints.txt
@@ -111,7 +111,7 @@ Note: The `jira issue move` command does not support the `--no-input` flag.
 
 ```bash
 # List active sprints and filter for SL team
-jira sprint list -p AROSLSRE --state active > $TMPDIR/sprints.txt && grep SL $TMPDIR/sprints.txt
+jira sprint list -p AROSLSRE --state active | grep SL
 ```
 
 The `grep SL` is because my team is Service Lifecycle (SL), so only sprints with SL in the name are the correct ones.
@@ -139,16 +139,16 @@ When the user says they want to "add my active card" or similar, it means creati
 
 1. **Project**: AROSLSRE
 2. **Assignee**: current user (run `jira me` to get the email)
-3. **Sprint**: current active SL sprint (find it with `jira sprint list -p AROSLSRE --state active > $TMPDIR/sprints.txt && grep SL $TMPDIR/sprints.txt`)
+3. **Sprint**: current active SL sprint (find it with `jira sprint list -p AROSLSRE --state active | grep SL`)
 4. **Status**: move to "In Progress" after creation
 
 Full workflow:
 ```bash
 # 1. Get current user
-jira me > $TMPDIR/me.txt
+jira me
 
 # 2. Get active sprint ID
-jira sprint list -p AROSLSRE --state active > $TMPDIR/sprints.txt && grep SL $TMPDIR/sprints.txt
+jira sprint list -p AROSLSRE --state active | grep SL
 
 # 3. Create the issue assigned to self
 jira issue create -p AROSLSRE -t Task -s "<summary>" -b "<description>" -a "<your-email>"
@@ -173,10 +173,3 @@ When asked to search for, list, or find "my issues" or "our team's issues", incl
    ```bash
    jira issue list -p ARO -C aro-hcp-service-lifecycle
    ```
-
-To search both at once, run both commands and combine the results (redirect each to a temp file):
-
-```bash
-jira issue list -p AROSLSRE --plain > $TMPDIR/issues_aroslsre.txt
-jira issue list -p ARO -C aro-hcp-service-lifecycle --plain > $TMPDIR/issues_aro_sl.txt
-```
